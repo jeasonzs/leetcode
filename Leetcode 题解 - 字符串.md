@@ -65,23 +65,7 @@ s = "rat", t = "car", return false.
 
 由于本题的字符串只包含 26 个小写字符，因此可以使用长度为 26 的整型数组对字符串出现的字符进行统计，不再使用 HashMap。
 
-```java
-public boolean isAnagram(String s, String t) {
-    int[] cnts = new int[26];
-    for (char c : s.toCharArray()) {
-        cnts[c - 'a']++;
-    }
-    for (char c : t.toCharArray()) {
-        cnts[c - 'a']--;
-    }
-    for (int cnt : cnts) {
-        if (cnt != 0) {
-            return false;
-        }
-    }
-    return true;
-}
-```
+
 
 ## 5. 计算一组字符集合可以组成的回文字符串的最大长度
 
@@ -99,22 +83,7 @@ Explanation : One longest palindrome that can be built is "dccaccd", whose lengt
 
 因为回文字符串最中间的那个字符可以单独出现，所以如果有单独的字符就把它放到最中间。
 
-```java
-public int longestPalindrome(String s) {
-    int[] cnts = new int[256];
-    for (char c : s.toCharArray()) {
-        cnts[c]++;
-    }
-    int palindrome = 0;
-    for (int cnt : cnts) {
-        palindrome += (cnt / 2) * 2;
-    }
-    if (palindrome < s.length()) {
-        palindrome++;   // 这个条件下 s 中一定有单个未使用的字符存在，可以把这个字符放到回文的最中间
-    }
-    return palindrome;
-}
-```
+
 
 ## 6. 字符串同构
 
@@ -130,21 +99,7 @@ Given "paper", "title", return true.
 
 记录一个字符上次出现的位置，如果两个字符串中的字符上次出现的位置一样，那么就属于同构。
 
-```java
-public boolean isIsomorphic(String s, String t) {
-    int[] preIndexOfS = new int[256];
-    int[] preIndexOfT = new int[256];
-    for (int i = 0; i < s.length(); i++) {
-        char sc = s.charAt(i), tc = t.charAt(i);
-        if (preIndexOfS[sc] != preIndexOfT[tc]) {
-            return false;
-        }
-        preIndexOfS[sc] = i + 1;
-        preIndexOfT[tc] = i + 1;
-    }
-    return true;
-}
-```
+
 
 ## 7. 回文子字符串个数
 
@@ -160,25 +115,6 @@ Explanation: Six palindromic strings: "a", "a", "a", "aa", "aa", "aaa".
 
 从字符串的某一位开始，尝试着去扩展子字符串。
 
-```java
-private int cnt = 0;
-
-public int countSubstrings(String s) {
-    for (int i = 0; i < s.length(); i++) {
-        extendSubstrings(s, i, i);     // 奇数长度
-        extendSubstrings(s, i, i + 1); // 偶数长度
-    }
-    return cnt;
-}
-
-private void extendSubstrings(String s, int start, int end) {
-    while (start >= 0 && end < s.length() && s.charAt(start) == s.charAt(end)) {
-        start--;
-        end++;
-        cnt++;
-    }
-}
-```
 
 ## 8. 判断一个整数是否是回文数
 
@@ -190,22 +126,6 @@ private void extendSubstrings(String s, int start, int end) {
 
 将整数分成左右两部分，右边那部分需要转置，然后判断这两部分是否相等。
 
-```java
-public boolean isPalindrome(int x) {
-    if (x == 0) {
-        return true;
-    }
-    if (x < 0 || x % 10 == 0) {
-        return false;
-    }
-    int right = 0;
-    while (x > right) {
-        right = right * 10 + x % 10;
-        x /= 10;
-    }
-    return x == right || x == right / 10;
-}
-```
 
 ## 9. 统计二进制字符串中连续 1 和连续 0 数量相同的子字符串个数
 
@@ -219,21 +139,4 @@ Output: 6
 Explanation: There are 6 substrings that have equal number of consecutive 1's and 0's: "0011", "01", "1100", "10", "0011", and "01".
 ```
 
-```java
-public int countBinarySubstrings(String s) {
-    int preLen = 0, curLen = 1, count = 0;
-    for (int i = 1; i < s.length(); i++) {
-        if (s.charAt(i) == s.charAt(i - 1)) {
-            curLen++;
-        } else {
-            preLen = curLen;
-            curLen = 1;
-        }
 
-        if (preLen >= curLen) {
-            count++;
-        }
-    }
-    return count;
-}
-```

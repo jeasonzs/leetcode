@@ -27,19 +27,6 @@
 
 用 HashMap 存储数组元素和索引的映射，在访问到 nums[i] 时，判断 HashMap 中是否存在 target - nums[i]，如果存在说明 target - nums[i] 所在的索引和 i 就是要找的两个数。该方法的时间复杂度为 O(N)，空间复杂度为 O(N)，使用空间来换取时间。
 
-```java
-public int[] twoSum(int[] nums, int target) {
-    HashMap<Integer, Integer> indexForNum = new HashMap<>();
-    for (int i = 0; i < nums.length; i++) {
-        if (indexForNum.containsKey(target - nums[i])) {
-            return new int[]{indexForNum.get(target - nums[i]), i};
-        } else {
-            indexForNum.put(nums[i], i);
-        }
-    }
-    return null;
-}
-```
 
 ## 2. 判断数组是否含有重复元素
 
@@ -47,15 +34,7 @@ public int[] twoSum(int[] nums, int target) {
 
 [Leetcode](https://leetcode.com/problems/contains-duplicate/description/) / [力扣](https://leetcode-cn.com/problems/contains-duplicate/description/)
 
-```java
-public boolean containsDuplicate(int[] nums) {
-    Set<Integer> set = new HashSet<>();
-    for (int num : nums) {
-        set.add(num);
-    }
-    return set.size() < nums.length;
-}
-```
+
 
 ## 3. 最长和谐序列
 
@@ -71,21 +50,7 @@ Explanation: The longest harmonious subsequence is [3,2,2,2,3].
 
 和谐序列中最大数和最小数之差正好为 1，应该注意的是序列的元素不一定是数组的连续元素。
 
-```java
-public int findLHS(int[] nums) {
-    Map<Integer, Integer> countForNum = new HashMap<>();
-    for (int num : nums) {
-        countForNum.put(num, countForNum.getOrDefault(num, 0) + 1);
-    }
-    int longest = 0;
-    for (int num : countForNum.keySet()) {
-        if (countForNum.containsKey(num + 1)) {
-            longest = Math.max(longest, countForNum.get(num + 1) + countForNum.get(num));
-        }
-    }
-    return longest;
-}
-```
+
 
 ## 4. 最长连续序列
 
@@ -100,36 +65,3 @@ The longest consecutive elements sequence is [1, 2, 3, 4]. Return its length: 4.
 
 要求以 O(N) 的时间复杂度求解。
 
-```java
-public int longestConsecutive(int[] nums) {
-    Map<Integer, Integer> countForNum = new HashMap<>();
-    for (int num : nums) {
-        countForNum.put(num, 1);
-    }
-    for (int num : nums) {
-        forward(countForNum, num);
-    }
-    return maxCount(countForNum);
-}
-
-private int forward(Map<Integer, Integer> countForNum, int num) {
-    if (!countForNum.containsKey(num)) {
-        return 0;
-    }
-    int cnt = countForNum.get(num);
-    if (cnt > 1) {
-        return cnt;
-    }
-    cnt = forward(countForNum, num + 1) + 1;
-    countForNum.put(num, cnt);
-    return cnt;
-}
-
-private int maxCount(Map<Integer, Integer> countForNum) {
-    int max = 0;
-    for (int num : countForNum.keySet()) {
-        max = Math.max(max, countForNum.get(num));
-    }
-    return max;
-}
-```

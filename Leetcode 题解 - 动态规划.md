@@ -316,7 +316,7 @@ dp[4] = dp[3] + 1 = 3
 综上，在 A[i] - A[i-1] == A[i-1] - A[i-2] 时，dp[i] = dp[i-1] + 1。
 
 因为递增子区间不一定以最后一个元素为结尾，可以是任意一个元素结尾，因此需要返回 dp 数组累加的结果。
-```java
+```cpp
 int numberOfArithmeticSlices(vector<int>& A) {
     vector<int> dp(A.size(), 0);
     int result = 0;
@@ -501,7 +501,19 @@ Output: 2
 
 [Leetcode](https://leetcode.com/problems/longest-common-subsequence/) / [力扣](https://leetcode-cn.com/problems/longest-common-subsequence/)
 
-
+```cpp
+int longestCommonSubsequence(string text1, string text2) {
+    int m = text1.length(), n = text2.length();
+    vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+    for (int i = 1; i <= m; i++) {
+    for (int j = 1; j <= n; j++) {
+        if (text1[i - 1] == text2[j - 1]) dp[i][j] = dp[i - 1][j - 1] + 1;
+        else dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+    }
+    }
+    return dp[m][n];
+}
+```
 ## 0-1 背包
 
 有一个容量为 N 的背包，要用这个背包装下物品的价值最大，这些物品有两个属性：体积 w 和价值 v。
