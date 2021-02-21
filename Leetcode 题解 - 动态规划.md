@@ -395,31 +395,25 @@ int integerBreak(int n) {
 
 [Leetcode](https://leetcode.com/problems/longest-increasing-subsequence/description/) / [力扣](https://leetcode-cn.com/problems/longest-increasing-subsequence/description/)
 
-
-
-使用 Stream 求最大值会导致运行时间过长，可以改成以下形式：
-
-
-
-以上解法的时间复杂度为 O(N<sup>2</sup>)，可以使用二分查找将时间复杂度降低为 O(NlogN)。
-
-定义一个 tails 数组，其中 tails[i] 存储长度为 i + 1 的最长递增子序列的最后一个元素。对于一个元素 x，
-
-- 如果它大于 tails 数组所有的值，那么把它添加到 tails 后面，表示最长递增子序列长度加 1；
-- 如果 tails[i-1] \< x \<= tails[i]，那么更新 tails[i] = x。
-
-例如对于数组 [4,3,6,5]，有：
-
-```html
-tails      len      num
-[]         0        4
-[4]        1        3
-[3]        1        6
-[3,6]      2        5
-[3,5]      2        null
+```cpp
+int lengthOfLIS(vector<int>& nums) {
+    int n = nums.size();
+    if (n == 0) return 0;
+    int mx = 1;
+    vector<int> dp(n, 1);
+    for (int i = 1; i < n; i++) {
+    for (int j = 0; j < i; j++) {
+        if (nums[j] < nums[i]) {
+        dp[i] = max(dp[j] + 1, dp[i]);
+        }
+    }
+    mx = max(mx, dp[i]);
+    }
+    return mx;
+}
 ```
 
-可以看出 tails 数组保持有序，因此在查找 S<sub>i</sub> 位于 tails 数组的位置时就可以使用二分查找。
+
 
 ### 2. 一组整数对能够构成的最长链
 
@@ -435,6 +429,26 @@ Explanation: The longest chain is [1,2] -> [3,4]
 
 题目描述：对于 (a, b) 和 (c, d) ，如果 b \< c，则它们可以构成一条链。
 
+```cpp
+int findLongestChain(vector<vector<int>>& pairs) {
+    int n = pairs.size();
+    if (n == 0) return 0;
+    sort(pairs.begin(), pairs.end(), [](vector<int>& a, vector<int>& b) {
+    return a[0] < b[0];
+    });
+    int mx = 1;
+    vector<int> dp(n , 1);
+    for (int i = 1; i < n; i++) {
+    for (int j = 0; j < i; j++) {
+        if (pairs[i][0] > pairs[j][1]) {
+            dp[i] = max(dp[j] + 1, dp[i]);
+        }
+    }
+    mx = max(mx, dp[i]);
+    }
+    return mx;
+}
+```
 
 ### 3. 最长摆动子序列
 
