@@ -157,6 +157,35 @@ Explanation: The endWord "cog" is not in wordList, therefore no possible transfo
  [0,0,0,0,0,0,0,1,1,1,0,0,0],
  [0,0,0,0,0,0,0,1,1,0,0,0,0]]
 ```
+```cpp
+class Solution {
+public:
+    vector<vector<int>> dirs = {
+      {-1, 0}, {1, 0},
+      {0, -1}, {0, 1}
+    };
+    int dfs(vector<vector<int>>& grid, int m, int n) {
+      if(m < 0 || m >= grid.size() ||
+        n < 0 || n >= grid[0].size() ||
+        !grid[m][n]) return 0;
+      int result = 1;
+      grid[m][n] = 0;
+      for (auto& dir : dirs) {
+        result += dfs(grid, m + dir[0], n + dir[1]);
+      }
+      return result;
+    }
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+      int result = 0;
+      for (int i = 0; i < grid.size(); i++) {
+        for (int j = 0; j < grid[i].size(); j++) {
+          result = max(result, dfs(grid, i, j));
+        }
+      }
+      return result;
+    }
+};
+```
 
 
 
@@ -175,9 +204,33 @@ Input:
 
 Output: 3
 ```
-
-可以将矩阵表示看成一张有向图。
-
+```cpp
+class Solution {
+public:
+    vector<vector<int>> dirs = {
+      {-1, 0}, {1, 0},
+      {0, -1}, {0, 1}
+    };
+    int dfs(vector<vector<char>>& grid, int m, int n) {
+      if (m < 0 || m >= grid.size() || n < 0 || n >= grid[0].size() || grid[m][n] != '1') return 0;
+      int result = 1;
+      grid[m][n] = '0';
+      for (auto& dir : dirs) {
+        result += dfs(grid, m + dir[0], n + dir[1]);
+      }
+      return result;
+    }
+    int numIslands(vector<vector<char>>& grid) {
+      int result = 0;
+      for (int i = 0; i < grid.size(); i++) {
+        for (int j = 0; j < grid[i].size(); j++) {
+          if (dfs(grid, i, j)) result++;
+        }
+      }
+      return result;
+    }
+};
+```
 
 ### 3. 好友关系的连通分量数目
 
@@ -273,7 +326,39 @@ Backtracking（回溯）属于 DFS。
 Input:Digit string "23"
 Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
 ```
-
+```cpp
+class Solution {
+public:
+    vector<string> table = {
+      "", "", "abc", "def",
+      "ghi",  "jkl", "mno",
+      "pqrs", "tuv", "wxyz"
+    };
+    void backtracing(vector<int>& nums, vector<string>& result, string& tmp) {
+      if (tmp.length() >= nums.size()) {
+        result.push_back(tmp);
+        return;
+      }
+      auto& s = table[nums[tmp.length()]];
+      for (int i = 0; i < s.length(); i++) {
+        tmp.push_back(s[i]);
+        backtracing(nums, result, tmp);
+        tmp.pop_back();
+      }
+    }
+    vector<string> letterCombinations(string digits) {
+      vector<string> result;
+      if (digits.length() == 0) return result;
+      vector<int> nums;
+      for (auto digit : digits) {
+        nums.push_back(digit - '0');
+      }
+      string tmp;
+      backtracing(nums, result, tmp);
+      return result;
+    }
+};
+```
 
 ### 2. IP 地址划分
 

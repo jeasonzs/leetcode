@@ -84,6 +84,23 @@ Explanation: The square root of 8 is 2.82842..., and since we want to return an 
 
 对于 x = 8，它的开方是 2.82842...，最后应该返回 2 而不是 3。在循环条件为 l \<= h 并且循环退出时，h 总是比 l 小 1，也就是说 h = 2，l = 3，因此最后的返回值应该为 h 而不是 l。
 
+```cpp
+class Solution {
+public:
+    int mySqrt(int x) {
+      if (x <= 1) return x;
+      int l = 0, r = x;
+      while (l <= r) {
+        auto mid = l + (r - l) / 2;
+        auto v = x / mid;
+        if (v < mid) r = mid - 1;
+        else if (v > mid) l = mid + 1;
+        else if (v == mid) return mid;
+      }
+      return r;
+    }
+};
+```
 
 ## 2. 大于给定元素的最小元素
 
@@ -104,7 +121,25 @@ Output: "c"
 ```
 
 题目描述：给定一个有序的字符数组 letters 和一个字符 target，要求找出 letters 中大于 target 的最小字符，如果找不到就返回第 1 个字符。
-
+```cpp
+class Solution {
+public:
+    char nextGreatestLetter(vector<char>& letters, char target) {
+      int l = 0, r = letters.size() - 1;
+      while (l <= r) {
+        auto mid = l + (r - l) / 2;
+        if (letters[mid] > target) {
+          r = mid - 1;
+        } else if (letters[mid] == target) {
+          l = mid + 1;
+        } else if (letters[mid] < target) {
+          l = mid + 1;
+        }
+      }
+      return letters[l % letters.size()];
+    }
+};
+```
 
 ## 3. 有序数组的 Single Element
 
@@ -140,6 +175,24 @@ Output: 2
 
 因为 h 的赋值表达式为 h = m，因此循环条件为 l \< h。
 
+```cpp
+class Solution {
+public:
+    int firstBadVersion(int n) {
+        int l = 0, r = n;
+        while (l < r) {
+          auto mid = l + (r - l) / 2;
+          if (isBadVersion(mid)) {
+            r = mid;
+          } else {
+            l = mid + 1;
+          }
+        }
+        return l;
+    }
+};
+```
+
 
 ## 5. 旋转数组的最小数字
 
@@ -151,7 +204,23 @@ Output: 2
 Input: [3,4,5,1,2],
 Output: 1
 ```
-
+```cpp
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+      int l = 0, r = nums.size() - 1;
+      while (l < r) {
+        auto mid = l + (r - l) / 2;
+        if (nums[mid] < nums[r]) {
+          r = mid;
+        } else {
+          l = mid + 1;
+        }
+      }
+      return nums[l];
+    }
+};
+```
 ## 6. 查找区间
 
 34\. Find First and Last Position of Element in Sorted Array

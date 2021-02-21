@@ -23,18 +23,19 @@
 Input: numbers={2, 7, 11, 15}, target=9
 Output: index1=1, index2=2
 ```
-
-题目描述：在有序数组中找出两个数，使它们的和为 target。
-
-使用双指针，一个指针指向值较小的元素，一个指针指向值较大的元素。指向较小元素的指针从头向尾遍历，指向较大元素的指针从尾向头遍历。
-
-- 如果两个指针指向元素的和 sum == target，那么得到要求的结果；
-- 如果 sum \> target，移动较大的元素，使 sum 变小一些；
-- 如果 sum \< target，移动较小的元素，使 sum 变大一些。
-
-数组中的元素最多遍历一次，时间复杂度为 O(N)。只使用了两个额外变量，空间复杂度为  O(1)。
-
-<div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/437cb54c-5970-4ba9-b2ef-2541f7d6c81e.gif" width="200px"> </div><br>
+```cpp
+vector<int> twoSum(vector<int>& numbers, int target) {
+    int n = numbers.size();
+    int l = 0, r = n - 1;
+    while (l < r) {
+    auto v = numbers[l] + numbers[r];
+        if (v < target) l++;
+        else if (v > target) r--;
+        else if (v == target) return {l + 1, r + 1};
+    }
+    return {};
+}
+```
 
 
 ## 2. 两数平方和
@@ -59,6 +60,22 @@ Explanation: 1 * 1 + 2 * 2 = 5
 
 因为最多只需要遍历一次 0\~sqrt(target)，所以时间复杂度为 O(sqrt(target))。又因为只使用了两个额外的变量，因此空间复杂度为 O(1)。
 
+```cpp
+class Solution {
+public:
+    bool judgeSquareSum(int c) {
+      long l = 0, r = sqrt(c);
+      while (l <= r) {
+        long sum = l * l + r * r;
+        if (sum > c) r--;
+        else if (sum < c) l++;
+        else return true;
+      }
+      return false;
+    }
+};
+```
+
 ## 3. 反转字符串中的元音字符
 
 345\. Reverse Vowels of a String (Easy)
@@ -68,17 +85,25 @@ Explanation: 1 * 1 + 2 * 2 = 5
 ```html
 Given s = "leetcode", return "leotcede".
 ```
-
-<div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/a7cb8423-895d-4975-8ef8-662a0029c772.png" width="400px"> </div><br>
-
-使用双指针，一个指针从头向尾遍历，一个指针从尾到头遍历，当两个指针都遍历到元音字符时，交换这两个元音字符。
-
-为了快速判断一个字符是不是元音字符，我们将全部元音字符添加到集合 HashSet 中，从而以 O(1) 的时间复杂度进行该操作。
-
-- 时间复杂度为 O(N)：只需要遍历所有元素一次
-- 空间复杂度 O(1)：只需要使用两个额外变量
-
-<div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/ef25ff7c-0f63-420d-8b30-eafbeea35d11.gif" width="400px"> </div><br>
+```cpp
+string reverseVowels(string s) {
+    int l = 0, r = s.length() - 1;
+    unordered_set<char> vowels({'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'});
+    while (l < r) {
+    bool lf = vowels.find(s[l]) != vowels.end();
+    bool rf = vowels.find(s[r]) != vowels.end();
+    if (lf && rf) {
+        swap(s[l], s[r]);
+        l++;
+        r--;
+    } else {
+        if (!lf) l++;
+        if (!rf) r--;
+    }
+    }
+    return s;
+}
+```
 
 
 ## 4. 回文字符串
@@ -109,6 +134,29 @@ Explanation: You could delete the character 'c'.
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/db5f30a7-8bfa-4ecc-ab5d-747c77818964.gif" width="300px"> </div><br>
 
+```cpp
+class Solution {
+public:
+    bool validPalindrome(string& s, int l, int r) {
+      while (l <= r) {
+        if (s[l++] != s[r--]) {
+          return false;
+        }
+      }
+      return true;
+    }
+    bool validPalindrome(string s) {
+      int l = 0, r = s.length() - 1;
+      while (l <= r) {
+        if (s[l] != s[r]) {
+          return validPalindrome(s, l + 1, r) || validPalindrome(s, l, r - 1);
+        }
+        l++; r--;
+      }
+      return true;
+    }
+};
+```
 
 ## 5. 归并两个有序数组
 
@@ -127,7 +175,22 @@ Output: [1,2,2,3,5,6]
 题目描述：把归并结果存到第一个数组上。
 
 需要从尾开始遍历，否则在 nums1 上归并得到的值会覆盖还未进行归并比较的值。
-
+```cpp
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+      int index = m + n - 1;
+      m--;
+      n--;
+      while (m >= 0 && n >= 0) {
+        if (nums1[m] >= nums2[n]) nums1[index--] = nums1[m--];
+        else if (nums1[m] < nums2[n]) nums1[index--] = nums2[n--];
+      }
+      while (m >= 0) nums1[index--] = nums1[m--];
+      while (n >= 0) nums1[index--] = nums2[n--];
+    }
+};
+```
 
 ## 6. 判断链表是否存在环
 
@@ -137,7 +200,21 @@ Output: [1,2,2,3,5,6]
 
 使用双指针，一个指针每次移动一个节点，一个指针每次移动两个节点，如果存在环，那么这两个指针一定会相遇。
 
-
+```cpp
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+      if (!head) return false;
+      auto l = head, r = head->next;
+      while (l && r && r->next) {
+        if (l == r) return true;
+        l = l->next;
+        r = r->next->next;
+      }
+      return false;
+    }
+};
+```
 ## 7. 最长子序列
 
 524\. Longest Word in Dictionary through Deleting (Medium)
@@ -155,4 +232,26 @@ Output:
 题目描述：删除 s 中的一些字符，使得它构成字符串列表 d 中的一个字符串，找出能构成的最长字符串。如果有多个相同长度的结果，返回字典序的最小字符串。
 
 通过删除字符串 s 中的一个字符能得到字符串 t，可以认为 t 是 s 的子序列，我们可以使用双指针来判断一个字符串是否为另一个字符串的子序列。
-
+```cpp
+class Solution {
+public:
+    string findLongestWord(string s, vector<string>& d) {
+      string result;
+      sort(d.begin(), d.end());
+      for (auto& item : d) {
+        int ps = 0, pi = 0;
+        while (ps < s.length() && pi < item.length()) {
+          if (s[ps] != item[pi]) ps++;
+          else {
+            ps++;
+            pi++;
+          }
+        }
+        if (pi == item.length() && pi > result.length()) {
+          result = item;
+        }
+      }
+      return result;
+    }
+};
+```
