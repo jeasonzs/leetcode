@@ -316,7 +316,19 @@ dp[4] = dp[3] + 1 = 3
 综上，在 A[i] - A[i-1] == A[i-1] - A[i-2] 时，dp[i] = dp[i-1] + 1。
 
 因为递增子区间不一定以最后一个元素为结尾，可以是任意一个元素结尾，因此需要返回 dp 数组累加的结果。
-
+```java
+int numberOfArithmeticSlices(vector<int>& A) {
+    vector<int> dp(A.size(), 0);
+    int result = 0;
+    for (int i = 2; i < A.size(); i++) {
+        if (A[i] - A[i - 1] == A[i - 1] - A[i - 2]) {
+            dp[i] = dp[i - 1] + 1;
+            result += dp[i];
+        }
+    }
+    return result;
+}
+```
 
 ## 分割整数
 
@@ -328,7 +340,19 @@ dp[4] = dp[3] + 1 = 3
 
 题目描述：For example, given n = 2, return 1 (2 = 1 + 1); given n = 10, return 36 (10 = 3 + 3 + 4).
 
-
+设第n个数是i，拆分为j 和 i - j，有两种情况：i - j不再拆分和继续拆分，看哪个大，然后将j从1到遍历，取最大值。
+```cpp
+int integerBreak(int n) {
+    vector<int> dp(n + 1, 0);
+    for (int i = 2; i <= n; i++) {
+        for (int j = 1; j < i; j++) {
+            auto a = max(j * (i - j), j * dp[i - j]);
+            dp[i] = max(a, dp[i]);
+        }
+    }
+    return dp[n];
+}
+```
 ### 2. 按平方数来分割整数
 
 279\. Perfect Squares(Medium)
