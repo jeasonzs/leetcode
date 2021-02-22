@@ -50,6 +50,31 @@
 
 [Leetcode](https://leetcode.com/problems/maximum-depth-of-binary-tree/description/) / [力扣](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/description/)
 
+```cpp
+class Solution {
+public:
+    // int maxDepth(TreeNode* root) {
+    //     if (root == nullptr) return 0;
+    //     return 1 + max(maxDepth(root->left), maxDepth(root->right));
+    // }
+    int maxDepth(TreeNode* root) {
+        if (root == nullptr) return 0;
+        queue<TreeNode*> q;
+        q.push(root);
+        int depth = 0;
+        while (!q.empty()) {
+            depth++;
+            for (int i = q.size(); i > 0; i--) {
+                auto node = q.front();
+                q.pop();
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+        }
+        return depth;
+    }
+};
+```
 
 
 ### 2. 平衡树
@@ -67,7 +92,20 @@
 ```
 
 平衡树左右子树高度差都小于等于 1
-
+```cpp
+class Solution {
+public:
+    int depth(TreeNode* node) {
+      if (!node) return 0;
+      return max(depth(node->left), depth(node->right)) + 1;
+    }
+    bool isBalanced(TreeNode* root) {
+      if (!root) return true;
+      auto diff = abs(depth(root->left) - depth(root->right));
+      return diff < 2 && isBalanced(root->left) && isBalanced(root->right);
+    }
+};
+```
 
 ### 3. 两节点的最长路径
 

@@ -59,6 +59,21 @@ B:    b1 → b2 → b3        e1 → e2
 - 把第一个链表的结尾连接到第二个链表的开头，看第二个链表是否存在环；
 - 或者直接比较两个链表的最后一个节点是否相同。
 
+```cpp
+class Solution {
+public:
+
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+      auto p1 = headA, p2 = headB;
+      while (p1 != p2) {
+        p1 = (p1 == nullptr) ? headB : p1->next;
+        p2 = (p2 == nullptr) ? headA : p2->next;
+      }
+      return p1;
+    }
+};
+```
+
 ##  2. 链表反转
 
 206\. Reverse Linked List (Easy)
@@ -67,7 +82,21 @@ B:    b1 → b2 → b3        e1 → e2
 
 递归
 
-
+```cpp
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+      ListNode* prev = nullptr;
+      while (head) {
+        auto next = head->next;
+        head->next = prev;
+        prev = head;
+        head = next;
+      }
+      return prev;
+    }
+};
+```
 
 ##  3. 归并两个有序的链表
 
@@ -75,6 +104,36 @@ B:    b1 → b2 → b3        e1 → e2
 
 [Leetcode](https://leetcode.com/problems/merge-two-sorted-lists/description/) / [力扣](https://leetcode-cn.com/problems/merge-two-sorted-lists/description/)
 
+```cpp
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+      ListNode node;
+      auto p = &node;
+      while (l1 && l2) {
+        if (l1->val < l2->val) {
+          p->next = l1;
+          l1 = l1->next;
+        } else {
+          p->next = l2;
+          l2 = l2->next;
+        }
+        p = p->next;
+      }
+      while (l1) {
+        p->next = l1;
+        l1 = l1->next;
+        p = p->next;
+      }
+      while (l2) {
+        p->next = l2;
+        l2 = l2->next;
+        p = p->next;
+      }
+      return node.next;
+    }
+};
+```
 
 ##  4. 从有序链表中删除重复节点
 
@@ -98,7 +157,22 @@ Given 1->1->2->3->3, return 1->2->3.
 Given linked list: 1->2->3->4->5, and n = 2.
 After removing the second node from the end, the linked list becomes 1->2->3->5.
 ```
-
+```cpp
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+      auto l = head, r = head;
+      while (n--) r = r->next;
+      if (!r) return head->next;
+      while (r->next) {
+        l = l->next;
+        r = r->next;
+      }
+      l->next = l->next->next;
+      return head;
+    }
+};
+```
 ##  6. 交换链表中的相邻结点
 
 24\. Swap Nodes in Pairs (Medium)
@@ -110,7 +184,19 @@ Given 1->2->3->4, you should return the list as 2->1->4->3.
 ```
 
 题目要求：不能修改结点的 val 值，O(1) 空间复杂度。
-
+```cpp
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+      if (!head || !head->next) return head;
+      auto first = head;
+      auto second = head->next;
+      first->next = swapPairs(second->next);
+      second->next = first;
+      return second;
+    }
+};
+```
 ##  7. 链表求和
 
 445\. Add Two Numbers II (Medium)
@@ -123,7 +209,39 @@ Output: 7 -> 8 -> 0 -> 7
 ```
 
 题目要求：不能修改原始链表。
-
+```cpp
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+      stack<int> s1, s2;
+      while (l1) {
+        s1.push(l1->val);
+        l1 = l1->next;
+      }
+      while (l2) {
+        s2.push(l2->val);
+        l2 = l2->next;
+      }
+      int c = 0;
+      ListNode* p = nullptr;
+      while (!s1.empty() || !s2.empty() || c) {
+        if (!s1.empty()) {
+          c += s1.top();
+          s1.pop();
+        }
+        if (!s2.empty()) {
+          c += s2.top();
+          s2.pop();
+        }
+        auto now = new ListNode(c % 10);
+        now->next = p;
+        p = now;
+        c /= 10;
+      }
+      return p;
+    }
+};
+```
 
 ##  8. 回文链表
 
@@ -134,7 +252,23 @@ Output: 7 -> 8 -> 0 -> 7
 题目要求：以 O(1) 的空间复杂度来求解。
 
 切成两半，把后半段反转，然后比较两半是否相等。
-
+```cpp
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+      vector<int> vec;
+      while (head) {
+        vec.push_back(head->val);
+        head = head->next;
+      }
+      int l = 0, r = vec.size() - 1;
+      while (l <= r) {
+        if (vec[l++] != vec[r--]) return false;
+      }
+      return true;
+    }
+};
+```
 
 ##  9. 分隔链表
 

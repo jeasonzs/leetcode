@@ -76,7 +76,38 @@
 
 题目描述：0 表示可以经过某个位置，求解从左上角到右下角的最短路径长度。
 
-
+```cpp
+class Solution {
+public:
+    int dirs[8][2] = {
+      {-1, -1}, {-1, 0}, {-1, 1},
+      { 0, -1},          { 0, 1},
+      { 1, -1}, { 1, 0}, { 1, 1},
+    };
+    int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
+      queue<vector<int>> q;
+      int m = grid.size(), n = grid[0].size();
+      if (grid[0][0] == 0 && grid[m - 1][n - 1] == 0) q.push({0, 0});
+      grid[0][0] = 0;
+      int ways = 0;
+      while (!q.empty()) {
+        ways++;
+        for (int i = q.size(); i > 0; i--) {
+          auto pos = q.front();
+          q.pop();
+          if (pos[0] == m - 1 && pos[1] == n - 1) return ways;
+          for (auto dir : dirs) {
+            int m_ = pos[0] + dir[0], n_ = pos[1] + dir[1];
+            if (m_ < 0 || m_ >= m || n_ < 0 || n_ >= n || grid[m_][n_] == 1) continue;
+            grid[m_][n_] = 1;
+            q.push({m_, n_});
+          }
+        }
+      }
+      return -1;
+    }
+};
+```
 
 ### 2. 组成整数的最小平方数数量
 
@@ -439,7 +470,35 @@ word = "ABCB", -> returns false.
 ```html
 ["1->2->5", "1->3"]
 ```
-
+```cpp
+class Solution {
+public:
+    void backtracing(TreeNode* node, vector<string>& result, vector<int>& tmp) {
+      if (!node) return;
+      tmp.push_back(node->val);
+      if (!node->left && !node->right) {
+        string str;
+        for (auto item : tmp) {
+          str += to_string(item) + "->";
+        }
+        if (!str.empty()) {
+          str.pop_back();
+          str.pop_back();
+        }
+        result.push_back(str);
+      }
+      backtracing(node->left, result, tmp);
+      backtracing(node->right, result, tmp);
+      tmp.pop_back();
+    }
+    vector<string> binaryTreePaths(TreeNode* root) {
+      vector<string> result;
+      vector<int> tmp;
+      backtracing(root, result, tmp);
+      return result;
+    }
+};
+```
 ### 5. 排列
 
 46\. Permutations (Medium)
@@ -456,6 +515,33 @@ word = "ABCB", -> returns false.
   [3,1,2],
   [3,2,1]
 ]
+```
+```cpp
+class Solution {
+public:
+    void backtracing(vector<int>& nums, vector<vector<int>>& result, vector<bool>& visited, vector<int>& tmp) {
+      if (tmp.size() == nums.size()) {
+        result.push_back(tmp);
+        return;
+      }
+      for (int i = 0; i < nums.size(); i++) {
+        if (visited[i]) continue;
+        tmp.push_back(nums[i]);
+        visited[i] = true;
+        backtracing(nums, result, visited, tmp);
+        visited[i] = false;
+        tmp.pop_back();
+      }
+
+    }
+    vector<vector<int>> permute(vector<int>& nums) {
+      vector<vector<int>> result;
+      vector<bool> visited(nums.size(), false);
+      vector<int> tmp;
+      backtracing(nums, result, visited, tmp);
+      return result;
+    }
+};
 ```
 
 ### 6. 含有相同元素求排列
@@ -506,6 +592,31 @@ given candidate set [2, 3, 6, 7] and target 7,
 A solution set is:
 [[7],[2, 2, 3]]
 ```
+```cpp
+class Solution {
+public:
+    void backtracking(vector<vector<int>>& result, vector<int>& nums, vector<int>& track, int target, int k) {
+      if (target <= 0) {
+        if (target == 0) {
+          result.push_back(track);
+        }
+        return;
+      }
+      for (int i = k; i < nums.size(); i++) {
+        track.push_back(nums[i]);
+        backtracking(result, nums, track, target - nums[i], i);
+        track.pop_back();
+      }
+    }
+
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+      vector<vector<int>> result;
+      vector<int> track;
+      backtracking(result, candidates, track, target, 0);
+      return result;
+    }
+};
+```
 
 
 ### 9. 含有相同元素的组合求和
@@ -524,7 +635,33 @@ A solution set is:
   [1, 1, 6]
 ]
 ```
-
+```cpp
+class Solution {
+public:
+    void backtracking(vector<vector<int>>& result, vector<int>& nums, vector<int>& track, vector<int>& visited, int target, int k) {
+      if (target <= 0) {
+        if (target == 0) result.push_back(track);
+        return;
+      }
+      for (int i = k; i < nums.size(); i++) {
+        if (i != 0 && nums[i] == nums[i - 1] && !visited[i - 1]) continue;
+        track.push_back(nums[i]);
+        visited[i] = true;
+        backtracking(result, nums, track, visited, target - nums[i], i + 1);
+        visited[i] = false;
+        track.pop_back();
+      }
+    }
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+      vector<vector<int>> result;
+      vector<int> track;
+      vector<int> visited(candidates.size(), false);
+      sort(candidates.begin(), candidates.end());
+      backtracking(result, candidates, track, visited, target, 0);
+      return result;
+    }
+};
+```
 
 ### 10. 1-9 数字的组合求和
 
