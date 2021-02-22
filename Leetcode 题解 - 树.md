@@ -414,7 +414,31 @@ Output: 5
 637\. Average of Levels in Binary Tree (Easy)
 
 [Leetcode](https://leetcode.com/problems/average-of-levels-in-binary-tree/description/) / [力扣](https://leetcode-cn.com/problems/average-of-levels-in-binary-tree/description/)
-
+```cpp
+class Solution {
+public:
+    vector<double> averageOfLevels(TreeNode* root) {
+        queue<TreeNode*> q;
+        vector<double> result;
+        q.push(root);
+        while (!q.empty()) {
+            double sum = 0;
+            int size = 0;
+            for (int i = q.size(); i > 0; i--) {
+                auto node = q.front();
+                q.pop();
+                if (!node) continue;
+                sum += node->val;
+                size++;
+                q.push(node->left);
+                q.push(node->right);
+            }
+            if (size) result.push_back(sum / size);
+        }
+        return result;
+    }
+};
+```
 
 
 ### 2. 得到左下角的节点
@@ -437,7 +461,29 @@ Input:
 Output:
 7
 ```
-
+```cpp
+class Solution {
+public:
+    int findBottomLeftValue(TreeNode* root) {
+        queue<TreeNode*> q;
+        q.push(root);
+        int left = 0;
+        while (!q.empty()) {
+            bool is_first = true;
+            for (int i = q.size(); i > 0; i--) {
+                auto node = q.front();
+                q.pop();
+                if (!node) continue;
+                if (is_first) left = node->val;
+                is_first = false;
+                q.push(node->left);
+                q.push(node->right);
+            }
+        }
+        return left;
+    }
+};
+```
 
 ## 前中后序遍历
 
@@ -463,6 +509,37 @@ Output:
 144\. Binary Tree Preorder Traversal (Medium)
 
 [Leetcode](https://leetcode.com/problems/binary-tree-preorder-traversal/description/) / [力扣](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/description/)
+```cpp
+class Solution {
+public:
+    // void traval(TreeNode* node, vector<int>& result) {
+    //     if (!node) return;
+    //     result.push_back(node->val);
+    //     traval(node->left, result);
+    //     traval(node->right, result);
+    // }
+    // vector<int> preorderTraversal(TreeNode* root) {
+    //     vector<int> result;
+    //     traval(root, result);
+    //     return result;
+    // }
+    vector<int> preorderTraversal(TreeNode* root) {
+        stack<TreeNode*> stk;
+        vector<int> result;
+        while (!stk.empty() || root) {
+            while (root) {
+                result.push_back(root->val);
+                stk.push(root);
+                root = root->left;
+            }
+            root = stk.top();
+            stk.pop();
+            root = root->right;
+        }
+        return result;
+    }
+};
+```
 
 
 ### 2. 非递归实现二叉树的后序遍历
