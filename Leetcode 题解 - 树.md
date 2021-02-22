@@ -310,7 +310,19 @@ public:
 
 树的根节点到叶子节点的最小路径长度
 
-
+```cpp
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if (!root) return 0;
+        if (!root->left && !root->right) return 1;
+        int min_depth = INT_MAX;
+        if (root->left) min_depth = min(min_depth, minDepth(root->left));
+        if (root->right) min_depth = min(min_depth, minDepth(root->right));
+        return min_depth + 1;
+    }
+};
+```
 
 ### 11. 统计左叶子节点的和
 
@@ -327,7 +339,19 @@ public:
 
 There are two left leaves in the binary tree, with values 9 and 15 respectively. Return 24.
 ```
-
+```cpp
+class Solution {
+public:
+    int sumOfLeftLeaves(TreeNode* root) {
+        if (!root) return 0;
+        int result = 0;
+        if (root->left && root->left->left == nullptr && root->left->right == nullptr) result += root->left->val;
+        result += sumOfLeftLeaves(root->left);
+        result += sumOfLeftLeaves(root->right);
+        return result;
+    }
+};
+```
 
 ### 12. 相同节点值的最大路径长度
 
