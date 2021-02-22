@@ -124,7 +124,23 @@ Input:
 
 Return 3, which is the length of the path [4,2,1,3] or [5,2,1,3].
 ```
-
+```cpp
+class Solution {
+public:
+    int mx = 0;
+    int depth(TreeNode* node) {
+        if (!node) return 0;
+        auto l = depth(node->left);
+        auto r = depth(node->right);
+        mx = max(mx, l + r);
+        return max(l, r) + 1;
+    }
+    int diameterOfBinaryTree(TreeNode* root) {
+        depth(root);
+        return mx;
+    }
+};
+```
 ### 4. 翻转树
 
 226\. Invert Binary Tree (Easy)
@@ -178,6 +194,16 @@ return true, as there exist a root-to-leaf path 5->4->11->2 which sum is 22.
 ```
 
 路径和定义为从 root 到 leaf 的所有节点的和。
+```cpp
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if (root == nullptr) return false;
+        if (root->left == nullptr && root->right == nullptr) return targetSum == root->val;
+        return hasPathSum(root->left, targetSum - root->val) || hasPathSum(root->right, targetSum - root->val);
+    }
+};
+```
 
 ### 7. 统计路径和等于一个数的路径数量
 
@@ -260,7 +286,20 @@ Return false.
  / \ / \
 3  4 4  3
 ```
-
+```cpp
+class Solution {
+public:
+    bool isSymmetric(TreeNode* a, TreeNode* b) {
+        if (!a && !b) return true;
+        if (!a || !b || a->val != b->val) return false;
+        return isSymmetric(a->left, b->right) && isSymmetric(a->right, b->left);
+    }
+    bool isSymmetric(TreeNode* root) {
+        if (!root) return false;
+        return isSymmetric(root->left, root->right);
+    }
+};
+```
 
 
 ### 10. 最小路径
