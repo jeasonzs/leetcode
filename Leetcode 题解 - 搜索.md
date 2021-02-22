@@ -370,7 +370,37 @@ public:
 Given "25525511135",
 return ["255.255.11.135", "255.255.111.35"].
 ```
-
+```cpp
+class Solution {
+public:
+    void backtracing(vector<string>& result, string& s, vector<int>& tmp, int start) {
+      if (start >= s.length() || tmp.size() >= 4) {
+        if (start >= s.length() && tmp.size() >= 4) {
+          string ip;
+          for (auto& item : tmp) ip.append(to_string(item) + ".");
+          ip.pop_back();
+          result.push_back(ip);
+        }
+        return;
+      }
+      for (int i = 0; i < 3 && start + i < s.length(); i++) {
+        if (s[start] == '0' && i != 0) continue;
+        auto val = stoi(s.substr(start, i + 1));
+        if (val < 256) {
+          tmp.push_back(val);
+          backtracing(result, s, tmp, start + i + 1);
+          tmp.pop_back();
+        }
+      }
+    }
+    vector<string> restoreIpAddresses(string s) {
+        vector<string> result;
+        vector<int> tmp;
+        backtracing(result, s, tmp, 0);
+        return result;
+    }
+};
+```
 
 ### 3. 在矩阵中寻找字符串
 
