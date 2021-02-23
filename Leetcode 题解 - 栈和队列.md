@@ -18,7 +18,51 @@
 
 栈的顺序为后进先出，而队列的顺序为先进先出。使用两个栈实现队列，一个元素需要经过两个栈才能出队列，在经过第一个栈时元素顺序被反转，经过第二个栈时再次被反转，此时就是先进先出顺序。
 
+```cpp
+class MyQueue {
+public:
+    stack<int> s1;
+    stack<int> s2;
+    /** Initialize your data structure here. */
+    MyQueue() {
 
+    }
+    
+    /** Push element x to the back of queue. */
+    void push(int x) {
+        while (!s2.empty()) {
+            s1.push(s2.top());
+            s2.pop();
+        }
+        s1.push(x);
+    }
+    
+    /** Removes the element from in front of queue and returns that element. */
+    int pop() {
+        while (!s1.empty()) {
+            s2.push(s1.top());
+            s1.pop();
+        }
+        auto result = s2.top();
+        s2.pop();
+        return result;
+    }
+    
+    /** Get the front element. */
+    int peek() {
+        while (!s1.empty()) {
+            s2.push(s1.top());
+            s1.pop();
+        }
+        return s2.top();
+    }
+    
+    /** Returns whether the queue is empty. */
+    bool empty() {
+        return s1.empty() && s2.empty();
+    }
+};
+``
 
 ## 2. 用队列实现栈
 
@@ -28,7 +72,59 @@
 
 在将一个元素 x 插入队列时，为了维护原来的后进先出顺序，需要让 x 插入队列首部。而队列的默认插入顺序是队列尾部，因此在将 x 插入队列尾部之后，需要让除了 x 之外的所有元素出队列，再入队列。
 
+```cpp
+class MyStack {
+public:
+    queue<int> q1, q2;
+    /** Initialize your data structure here. */
+    MyStack() {
 
+    }
+    
+    /** Push element x onto stack. */
+    void push(int x) {
+        if (q1.empty()) {
+            q1.push(x);
+            while (!q2.empty()) {
+                q1.push(q2.front());
+                q2.pop();
+            }
+        } else {
+            q2.push(x);
+            while (!q1.empty()) {
+                q2.push(q1.front());
+                q1.pop();
+            }
+        }
+    }
+    
+    /** Removes the element on top of the stack and returns that element. */
+    int pop() {
+        int result = -1;
+        if (!q1.empty()) {
+            result = q1.front();
+            q1.pop();
+        }
+        if (!q2.empty()) {
+            result = q2.front();
+            q2.pop();
+        }
+        return result;
+    }
+    
+    /** Get the top element. */
+    int top() {
+        if (!q1.empty()) return q1.front();
+        if (!q2.empty()) return q2.front();
+        return -1;
+    }
+    
+    /** Returns whether the stack is empty. */
+    bool empty() {
+        return q1.empty() && q2.empty();
+    }
+};
+```
 
 ## 3. 最小值栈
 
