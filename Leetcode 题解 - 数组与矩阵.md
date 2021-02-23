@@ -25,7 +25,21 @@
 ```html
 For example, given nums = [0, 1, 0, 3, 12], after calling your function, nums should be [1, 3, 12, 0, 0].
 ```
-
+```cpp
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int l = 0, r = 0;
+        while (r < nums.size()) {
+          if (nums[r]) {
+            swap(nums[l], nums[r]);
+            l++;
+          }
+          r++;
+        }
+    }
+};
+```
 ## 2. 改变矩阵维度
 
 566\. Reshape the Matrix (Easy)
