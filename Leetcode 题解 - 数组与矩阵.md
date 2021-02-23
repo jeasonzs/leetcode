@@ -165,6 +165,23 @@ Output: [2,3]
 最直接的方法是先对数组进行排序，这种方法时间复杂度为 O(NlogN)。本题可以以 O(N) 的时间复杂度、O(1) 空间复杂度来求解。
 
 主要思想是通过交换数组元素，使得数组上的元素在正确的位置上。
+```cpp
+class Solution {
+public:
+    vector<int> findErrorNums(vector<int>& nums) {
+        vector<int> table(nums.size() + 1, 0);
+        vector<int> result(2, 0);
+        for (auto num : nums) {
+            table[num]++;
+        }
+        for (int i = 1; i < table.size(); i++) {
+            if (table[i] == 0) result[1] = i;
+            else if (table[i] == 2) result[0] = i;
+        }
+        return result;
+    }
+};
+```
 
 ## 7. 找出数组中重复的数，数组值在 [1, n] 之间
 
