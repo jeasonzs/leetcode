@@ -131,7 +131,38 @@ public:
 155\. Min Stack (Easy)
 
 [Leetcode](https://leetcode.com/problems/min-stack/description/) / [力扣](https://leetcode-cn.com/problems/min-stack/description/)
+```cpp
+class MinStack {
+public:
+    /** initialize your data structure here. */
+    stack<int> s1, s2;
+    MinStack() {
 
+    }
+    
+    void push(int x) {
+      s1.push(x);
+      if (s2.empty() || x <= s2.top()) {
+        s2.push(x);
+      }
+    }
+    
+    void pop() {
+      if (s1.top() == s2.top()) {
+        s2.pop();
+      }
+      s1.pop();
+    }
+    
+    int top() {
+      return s1.top();
+    }
+    
+    int getMin() {
+      return s2.top();
+    }
+};
+```
 
 
 对于实现最小值队列问题，可以先将队列使用栈来实现，然后就将问题转换为最小值栈，这个问题出现在 编程之美：3.7。
@@ -147,7 +178,34 @@ public:
 
 Output : true
 ```
-
+```cpp
+class Solution {
+public:
+    bool isValid(string s) {
+      stack<char> stk;
+      for (auto c : s) {
+        switch(c) {
+          case ')':
+            if (stk.empty() || stk.top() != '(') return false;
+            stk.pop();
+            break;
+          case ']':
+            if (stk.empty() || stk.top() != '[') return false;
+            stk.pop();
+            break;
+          case '}':
+            if (stk.empty() || stk.top() != '{') return false;
+            stk.pop();
+            break;
+          default : 
+            stk.push(c);
+            break;
+        }
+      }
+      return stk.empty();
+    }
+};
+```
 
 ## 5. 数组中元素与下一个比它大的元素之间的距离
 
@@ -162,7 +220,27 @@ Output: [1, 1, 4, 2, 1, 1, 0, 0]
 
 在遍历数组时用栈把数组中的数存起来，如果当前遍历的数比栈顶元素来的大，说明栈顶元素的下一个比它大的数就是当前元素。
 
-
+```cpp
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& T) {
+      int n = T.size();
+      vector<int> result(n, 0);
+      stack<int> stk;
+      for (int i = 0; i < n; i++) {
+        if (stk.empty()) stk.push(i);
+        else {
+          while (!stk.empty() && T[stk.top()] < T[i]) {
+            result[stk.top()] = i - stk.top();
+            stk.pop();
+          }
+          stk.push(i);
+        }
+      }
+      return result;
+    }
+};
+```
 
 ## 6. 循环数组中比当前元素大的下一个元素
 
