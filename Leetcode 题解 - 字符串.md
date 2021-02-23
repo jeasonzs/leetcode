@@ -65,7 +65,22 @@ s = "rat", t = "car", return false.
 
 由于本题的字符串只包含 26 个小写字符，因此可以使用长度为 26 的整型数组对字符串出现的字符进行统计，不再使用 HashMap。
 
-
+```cpp
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+      if (s.length() != t.length()) return false;
+      unordered_map<int, int> t1, t2;
+      for (auto c : s) {
+        t1[c]++;
+      }
+      for (auto c : t) {
+        t2[c]++;
+      }
+      return t1 == t2;
+  }
+};
+```
 
 ## 5. 计算一组字符集合可以组成的回文字符串的最大长度
 
@@ -82,7 +97,26 @@ Explanation : One longest palindrome that can be built is "dccaccd", whose lengt
 使用长度为 256 的整型数组来统计每个字符出现的个数，每个字符有偶数个可以用来构成回文字符串。
 
 因为回文字符串最中间的那个字符可以单独出现，所以如果有单独的字符就把它放到最中间。
-
+```cpp
+class Solution {
+public:
+    int longestPalindrome(string s) {
+      int table[256] = {0};
+      for (auto c : s) {
+        table[c]++;
+      }
+      int one_size = 0, pair_size = 0;
+      for (auto t : table) {
+        if (t % 2 == 0) pair_size += t;
+        else {
+          pair_size += t / 2 * 2;
+          one_size++;
+        }
+      }
+      return pair_size + (one_size > 0);
+    }
+};
+```
 
 
 ## 6. 字符串同构
@@ -125,6 +159,25 @@ Explanation: Six palindromic strings: "a", "a", "a", "aa", "aa", "aaa".
 要求不能使用额外空间，也就不能将整数转换为字符串进行判断。
 
 将整数分成左右两部分，右边那部分需要转置，然后判断这两部分是否相等。
+```cpp
+class Solution {
+public:
+    bool isPalindrome(int x) {
+      if (x < 0) return false;
+      if (x < 10) return true;
+      vector<int> vec;
+      while (x) {
+        vec.push_back(x % 10);
+        x /= 10;
+      }
+      int l = 0, r = vec.size() - 1;
+      while (l <= r) {
+        if (vec[l++] != vec[r--]) return false;
+      }
+      return true;
+    }
+};
+```
 
 
 ## 9. 统计二进制字符串中连续 1 和连续 0 数量相同的子字符串个数
