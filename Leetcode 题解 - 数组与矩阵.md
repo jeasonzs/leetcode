@@ -59,14 +59,41 @@ Output:
 Explanation:
 The row-traversing of nums is [1,2,3,4]. The new reshaped matrix is a 1 * 4 matrix, fill it row by row by using the previous list.
 ```
-
+```cpp
+class Solution {
+public:
+    vector<vector<int>> matrixReshape(vector<vector<int>>& nums, int r, int c) {
+      int m = nums.size(), n = nums[0].size();
+      if (m * n != r * c) return nums;
+      int size = m * n;
+      vector<vector<int>> result(r, vector(c, 0));
+      for (int i = 0; i < size; i++) {
+        result[i / c][i % c] = nums[i / n][i % n];
+      }
+      return result;
+    }
+};
+```
 
 ## 3. 找出数组中最长的连续 1
 
 485\. Max Consecutive Ones (Easy)
 
 [Leetcode](https://leetcode.com/problems/max-consecutive-ones/description/) / [力扣](https://leetcode-cn.com/problems/max-consecutive-ones/description/)
-
+```cpp
+class Solution {
+public:
+    int findMaxConsecutiveOnes(vector<int>& nums) {
+      int count = 0, mx = 0;
+      for (auto num : nums) {
+        count += num;
+        count *= num;
+        mx = max(count, mx);
+      }
+      return mx;
+    }
+};
+```
 ## 4. 有序矩阵查找
 
 240\. Search a 2D Matrix II (Medium)
@@ -81,18 +108,19 @@ The row-traversing of nums is [1,2,3,4]. The new reshaped matrix is a 1 * 4 matr
 ]
 ```
 ```cpp
-bool searchMatrix(vector<vector<int>>& matrix, int target) {
-  int m = matrix.size(), n = matrix[0].size();
-  int l = 0, r = m * n - 1;
-  while (l <= r) {
-    auto mid = l + (r - l) / 2;
-    auto v = matrix[mid / n][mid % n];
-    if (v > target) r = mid - 1;
-    else if (v < target) l = mid + 1;
-    else if (v == target) return true;
-  }
-  return false;
-}
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int m = matrix.size(), n = matrix[0].size();
+        int i = 0, j = n - 1;
+        while (i < m && j >= 0) {
+          if (matrix[i][j] < target) i++;
+          else if (matrix[i][j] > target) j--;
+          else return true;
+        }
+        return false;
+    }
+};
 ```
 
 ## 5. 有序矩阵的 Kth Element
