@@ -20,7 +20,30 @@ Input: "2-1-1".
 
 Output : [0, 2]
 ```
-
+```cpp
+class Solution {
+public:
+    vector<int> diffWaysToCompute(string input) {
+      vector<int> result;
+      for (int i = 0; i < input.length(); i++) {
+        auto c = input[i];
+        if (c == '+' || c == '-' || c == '*') {
+          auto left = diffWaysToCompute(input.substr(0, i));
+          auto right = diffWaysToCompute(input.substr(i + 1, input.length() - i - 1));
+          for (auto l : left) {
+            for (auto r : right) {
+              if (c == '+') result.push_back(l + r);
+              else if (c == '-') result.push_back(l - r);
+              else if (c == '*') result.push_back(l * r);
+            }
+          }
+        }
+      }
+      if (result.empty()) result.push_back(stoi(input));
+      return result;
+    }
+};
+```
 
 
 ## 2. 不同的二叉搜索树
@@ -49,4 +72,26 @@ The above output corresponds to the 5 unique BST's shown below:
      3     2     1      1   3      2
     /     /       \                 \
    2     1         2                 3
+```
+```cpp
+class Solution {
+public:
+    vector<TreeNode*> generateTrees(int s, int e) {
+      vector<TreeNode*> result;
+      for (int i = s; i <= e; i++) {
+        auto left = generateTrees(s, i - 1);
+        auto right = generateTrees(i + 1, e);
+        for (auto l : left) {
+          for (auto r : right) {
+            result.push_back(new TreeNode(i, l, r));
+          }
+        }
+      }
+      if (result.empty()) result.push_back(nullptr);
+      return result;
+    }
+    vector<TreeNode*> generateTrees(int n) {
+      return generateTrees(1, n);
+    }
+};
 ```
