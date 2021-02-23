@@ -171,7 +171,18 @@ Output:
       / \   \
      5   4   7
 ```
-
+```cpp
+class Solution {
+public:
+    TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
+      if (!root1) return root2;
+      if (!root2) return root1;
+      auto left = mergeTrees(root1->left, root2->left);
+      auto right = mergeTrees(root1->right, root2->right);
+      return new TreeNode(root1->val + root2->val, left, right);
+    }
+};
+```
 
 ### 6. 判断路径和是否等于一个数
 
@@ -230,7 +241,30 @@ Return 3. The paths that sum to 8 are:
 ```
 
 路径不一定以 root 开头，也不一定以 leaf 结尾，但是必须连续。
+```cpp
+class Solution {
+public:
+    void traval(TreeNode* node, int sum, int& result) {
+      if (!node) return;
+      sum -= node->val;
+      if (sum == 0) result++;
+      traval(node->left, sum, result);
+      traval(node->right, sum, result);
 
+    }
+    void pathSum(TreeNode* root, int sum, int& result) {
+      if (!root) return;
+      traval(root, sum, result);
+      pathSum(root->left, sum, result);
+      pathSum(root->right, sum, result);
+    }
+    int pathSum(TreeNode* root, int sum) {
+        int result = 0;
+        pathSum(root, sum, result);
+        return result;
+    }
+};
+```
 
 
 ### 8. 子树
@@ -271,7 +305,21 @@ Given tree t:
 
 Return false.
 ```
-
+```cpp
+class Solution {
+public:
+    bool isSame(TreeNode* s, TreeNode* t) {
+      if (!s && !t) return true;
+      if (!s || !t) return false;
+      return s->val == t->val && isSame(s->left, t->left) && isSame(s->right, t->right);
+    }
+    bool isSubtree(TreeNode* s, TreeNode* t) {
+      if (!s) return false;
+      if (isSame(s, t)) return true;
+      return isSubtree(s->left, t) || isSubtree(s->right, t);
+    }
+};
+```
 
 ### 9. 树的对称
 
