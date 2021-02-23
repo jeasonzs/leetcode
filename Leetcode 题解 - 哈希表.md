@@ -34,7 +34,19 @@
 
 [Leetcode](https://leetcode.com/problems/contains-duplicate/description/) / [力扣](https://leetcode-cn.com/problems/contains-duplicate/description/)
 
-
+```cpp
+class Solution {
+public:
+    bool containsDuplicate(vector<int>& nums) {
+      unordered_set<int> s;
+      for (auto num : nums) {
+        if (s.find(num) != s.end()) return true;
+        s.insert(num);
+      }
+      return false;
+    }
+};
+```
 
 ## 3. 最长和谐序列
 
@@ -50,7 +62,29 @@ Explanation: The longest harmonious subsequence is [3,2,2,2,3].
 
 和谐序列中最大数和最小数之差正好为 1，应该注意的是序列的元素不一定是数组的连续元素。
 
-
+```cpp
+class Solution {
+public:
+    int findLHS(vector<int>& nums) {
+      unordered_map<int, int> table;
+      int mx = 0;
+      for (auto num : nums) {
+        table[num]++;
+      }
+      for (auto t : table) {
+        auto s = t.second;
+        auto iter = table.find(t.first + 1);
+        if (iter != table.end()) {
+          s += iter->second;
+        } else {
+          s = 0;
+        }
+        mx = max(mx, s);
+      }
+      return mx;
+    }
+};
+```
 
 ## 4. 最长连续序列
 
