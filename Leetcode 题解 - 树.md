@@ -775,6 +775,25 @@ One possible answer is: [0,-3,9,-10,null,5], which represents the following heig
    /   /
  -10  5
 ```
+```cpp
+class Solution {
+public:
+    TreeNode* toBST(vector<int>& nums, int s, int e) {
+      if (s >= e) return nullptr;
+      auto mid = s + (e - s) / 2;
+      return new TreeNode(nums[mid], toBST(nums, s, mid), toBST(nums, mid + 1, e));
+    }
+
+    TreeNode* sortedListToBST(ListNode* head) {
+      vector<int> nums;
+      while (head) {
+        nums.push_back(head->val);
+        head = head->next;
+      }
+      return toBST(nums, 0, nums.size());
+    }
+};
+```
 
 ### 8. 在二叉查找树中寻找两个节点，使它们的和为一个给定值
 
@@ -799,7 +818,29 @@ Output: True
 使用中序遍历得到有序数组之后，再利用双指针对数组进行查找。
 
 应该注意到，这一题不能用分别在左右子树两部分来处理这种思想，因为两个待求的节点可能分别在左右子树中。
-
+```cpp
+class Solution {
+public:
+    void traval(vector<int>& nums, TreeNode* node) {
+      if (!node) return;
+      traval(nums, node->left);
+      nums.push_back(node->val);
+      traval(nums, node->right);
+    }
+    bool findTarget(TreeNode* root, int k) {
+        vector<int> nums;
+        traval(nums, root);
+        int l = 0, r = nums.size() - 1;
+        while (l < r) {
+          auto v = nums[l] + nums[r];
+          if (v > k) r--;
+          else if (v < k) l++;
+          else return true;
+        }
+        return false;
+    }
+};
+```
 
 
 ### 9. 在二叉查找树中查找两个节点之差的最小绝对值
@@ -823,7 +864,24 @@ Output:
 ```
 
 利用二叉查找树的中序遍历为有序的性质，计算中序遍历中临近的两个节点之差的绝对值，取最小值。
-
+```cpp
+class Solution {
+public:
+    void minDiff(TreeNode* node, int& mi, int& last) {
+      if (!node) return;
+      minDiff(node->left, mi, last);
+      mi = min(abs(node->val - last), mi);
+      last = node->val;
+      minDiff(node->right, mi, last);
+    }
+    int getMinimumDifference(TreeNode* root) {
+      int last = INT_MAX;
+      int mi = INT_MAX;
+      minDiff(root, mi, last);
+      return mi;
+    }
+};
+```
 
 ### 10. 寻找二叉查找树中出现次数最多的值
 
