@@ -432,6 +432,18 @@ Output : 2
      3   1
 Maximum amount of money the thief can rob = 3 + 3 + 1 = 7.
 ```
+```cpp
+class Solution {
+public:
+    int rob(TreeNode* root) {
+      if(!root) return 0;
+      int ls = 0, rs = 0;
+      if (root->left) ls = rob(root->left->left) + rob(root->left->right);
+      if (root->right) rs = rob(root->right->left) + rob(root->right->right);
+      return max(ls + rs + root->val, rob(root->left) + rob(root->right));
+    }
+};
+```
 
 ### 14. 找出二叉树中第二小的节点
 
@@ -642,7 +654,19 @@ Output:
 ```
 
 题目描述：只保留值在 L \~ R 之间的节点
-
+```cpp
+class Solution {
+public:
+    TreeNode* trimBST(TreeNode* root, int low, int high) {
+      if (!root) return nullptr;
+      if (root->val < low) return trimBST(root->right, low, high);
+      if (root->val > high) return trimBST(root->left, low, high);
+      root->left = trimBST(root->left, low, high);
+      root->right = trimBST(root->right, low, high);
+      return root;
+    }
+};
+```
 
 ### 2. 寻找二叉查找树的第 k 个元素
 
@@ -717,6 +741,22 @@ For example, the lowest common ancestor (LCA) of nodes 5 and 1 is 3. Another exa
 108\. Convert Sorted Array to Binary Search Tree (Easy)
 
 [Leetcode](https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/description/) / [力扣](https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/description/)
+```cpp
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums, int s, int e) {
+      if (s >= e) return nullptr;
+      int mid = s + (e - s) / 2;
+      auto left = sortedArrayToBST(nums, s, mid);
+      auto right = sortedArrayToBST(nums, mid + 1, e);
+      return new TreeNode(nums[mid], left, right);
+    }
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+      return sortedArrayToBST(nums, 0, nums.size());
+    }
+};
+```
+
 
 ### 7. 根据有序链表构造平衡的二叉查找树
 

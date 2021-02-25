@@ -161,7 +161,21 @@ Output: 2
 从上面的规律可以知道，如果 nums[m] == nums[m + 1]，那么 index 所在的数组位置为 [m + 2, h]，此时令 l = m + 2；如果 nums[m] != nums[m + 1]，那么 index 所在的数组位置为 [l, m]，此时令 h = m。
 
 因为 h 的赋值表达式为 h = m，那么循环条件也就只能使用 l \< h 这种形式。
-
+```cpp
+class Solution {
+public:
+    int singleNonDuplicate(vector<int>& nums) {
+      int l = 0, r = nums.size() - 1;
+      while ( l < r) {
+        auto mid = l + (r - l) / 2;
+        if (mid % 2) mid--;
+        if (nums[mid] != nums[mid + 1]) r = mid - 1;
+        else l = mid + 2;
+      }
+      return nums[l];
+    }
+};
+```
 
 ## 4. 第一个错误的版本
 

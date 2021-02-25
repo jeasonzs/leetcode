@@ -145,7 +145,21 @@ public:
 Given 1->1->2, return 1->2.
 Given 1->1->2->3->3, return 1->2->3.
 ```
-
+```cpp
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+      if (!head) return head;
+      auto prev = head, p = head->next;
+      while (p) {
+        if (p->val == prev->val) prev->next = p->next;
+        else prev = p;
+        p = p->next;
+      }
+      return head;
+    }
+};
+```
 
 ##  5. 删除链表的倒数第 n 个节点
 
