@@ -258,3 +258,22 @@ The second 1's next greater number needs to search circularly, which is also 2.
 
 与 739. Daily Temperatures (Medium) 不同的是，数组是循环数组，并且最后要求的不是距离而是下一个元素。
 
+```cpp
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& nums) {
+        vector<int> result(nums.size(), -1);
+        stack<int> s;
+        int size = nums.size();
+        for (int i = 0; i < size * 2; i++) {
+            auto index = i % size;
+            while (!s.empty() && nums[index] > nums[s.top()]) {
+                result[s.top()] = nums[index];
+                s.pop();
+            }
+            if (i < size) s.push(i);
+        }
+        return result;
+    }
+};
+```

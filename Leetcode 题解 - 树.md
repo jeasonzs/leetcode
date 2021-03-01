@@ -147,7 +147,18 @@ public:
 
 [Leetcode](https://leetcode.com/problems/invert-binary-tree/description/) / [力扣](https://leetcode-cn.com/problems/invert-binary-tree/description/)
 
-
+```cpp
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+      if (!root) return root;
+      auto left = root->left;
+      root->left = invertTree(root->right);
+      root->right = invertTree(left);
+      return root;
+    }
+};
+```
 
 ### 5. 归并两棵树
 
@@ -416,6 +427,26 @@ public:
 
 Output : 2
 ```
+```cpp
+class Solution {
+public:
+    int arrowLength(TreeNode* node, int& result) {
+      if (!node) return 0;
+      auto l = arrowLength(node->left, result);
+      auto r = arrowLength(node->right, result);
+      auto al = 0, ar = 0;
+      if (node->left && node->val == node->left->val) al = l + 1;
+      if (node->right && node->val == node->right->val) ar = r + 1;
+      result = max(result, al + ar);
+      return max(al, ar);
+    }
+    int longestUnivaluePath(TreeNode* root) {
+      int result = 0;
+      arrowLength(root, result);
+      return result;
+    }
+};
+```
 
 
 ### 13. 间隔遍历
@@ -623,6 +654,40 @@ public:
 二叉查找树（BST）：根节点大于等于左子树所有节点，小于等于右子树所有节点。
 
 二叉查找树中序遍历有序。
+```cpp
+class Solution {
+public:
+                    
+    // void traval(TreeNode* node, vector<int>& result) {
+    //   if (!node) return;
+    //   traval(node->left, result);
+    //   result.push_back(node->val);
+    //   traval(node->right, result);
+    // }
+    // vector<int> inorderTraversal(TreeNode* root) {
+    //   vector<int> result;
+    //   traval(root, result);
+    //   return result;
+    // }
+    vector<int> inorderTraversal(TreeNode* root) {
+      vector<int> result;
+      stack<TreeNode*> stk;
+      TreeNode* node = root;
+      while (!stk.empty() || node) {
+        while(node) {
+          stk.push(node);
+          node = node->left;
+        }
+        node = stk.top();
+        stk.pop();
+        result.push_back(node->val);
+        node = node->right;
+      }
+      
+      return result;
+    }
+};
+```
 
 ### 1. 修剪二叉查找树
 

@@ -559,7 +559,34 @@ public:
 
 在实现上，和 Permutations 不同的是要先排序，然后在添加一个元素时，判断这个元素是否等于前一个元素，如果等于，并且前一个元素还未访问，那么就跳过这个元素。
 
-
+```cpp
+class Solution {
+public:
+    void backtracking(vector<int>& nums, vector<vector<int>>& result, vector<int>& cache, vector<bool>& visited) {
+      if (cache.size() == nums.size()) {
+        result.push_back(cache);
+        return;
+      }
+      for (int i = 0; i < nums.size(); i++) {
+        if (visited[i]) continue;
+        if (i != 0 && nums[i] == nums[i - 1] && !visited[i - 1]) continue;
+        visited[i] = true;
+        cache.push_back(nums[i]);
+        backtracking(nums, result, cache, visited);
+        cache.pop_back();
+        visited[i] = false;
+      }
+    }
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+      sort(nums.begin(), nums.end());
+      vector<vector<int>> result;
+      vector<int> cache;
+      vector<bool> visited(nums.size(), false);
+      backtracking(nums, result, cache, visited);
+      return result;
+    }
+};
+```
 
 ### 7. 组合
 
